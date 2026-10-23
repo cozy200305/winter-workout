@@ -5,6 +5,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <title>Winter Strength & Hypertrophy</title>
 
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="Workout">
+
   <style>
     :root {
       --bg: #fbfbf9;
@@ -42,7 +46,6 @@
       padding: 16px 14px;
     }
 
-    /* Header & Bar */
     header {
       padding: 10px 4px 14px;
       border-bottom: 1px solid var(--border);
@@ -88,4 +91,880 @@
       background-color: var(--card-inner);
     }
 
-    /* Week Management Bar
+    .week-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background-color: var(--card-inner);
+      padding: 6px 10px;
+      border-radius: 10px;
+      margin-bottom: 12px;
+    }
+
+    .week-nav {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .week-selector {
+      font-size: 0.95rem;
+      font-weight: 600;
+      background: none;
+      border: none;
+      color: var(--text);
+      cursor: pointer;
+      font-family: inherit;
+    }
+
+    .nav-arrow {
+      background: none;
+      border: none;
+      font-size: 1.1rem;
+      color: var(--amber-dark);
+      cursor: pointer;
+      padding: 2px 6px;
+    }
+
+    .new-week-btn {
+      font-size: 0.8rem;
+      font-weight: 600;
+      background-color: var(--amber);
+      color: white;
+      border: none;
+      padding: 5px 10px;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    .day-selector-scroll {
+      display: flex;
+      gap: 6px;
+      overflow-x: auto;
+      padding-bottom: 8px;
+      margin-bottom: 16px;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+    }
+    .day-selector-scroll::-webkit-scrollbar {
+      display: none;
+    }
+
+    .day-tab {
+      flex: 0 0 auto;
+      padding: 8px 12px;
+      border-radius: 9px;
+      background-color: var(--card-bg);
+      border: 1px solid var(--border);
+      font-size: 0.85rem;
+      font-weight: 500;
+      color: var(--text);
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .day-tab.active {
+      background-color: var(--text);
+      color: #ffffff;
+      border-color: var(--text);
+    }
+
+    .day-tab .tag {
+      font-size: 0.68rem;
+      opacity: 0.75;
+    }
+
+    .day-banner {
+      background-color: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 14px;
+      margin-bottom: 16px;
+    }
+
+    .day-title-input {
+      font-size: 1.35rem;
+      font-weight: 700;
+      border: none;
+      background: transparent;
+      width: 100%;
+      color: var(--text);
+      outline: none;
+      font-family: inherit;
+    }
+
+    .day-desc-input {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      border: none;
+      background: transparent;
+      width: 100%;
+      outline: none;
+      font-family: inherit;
+      margin-top: 4px;
+    }
+
+    .day-controls {
+      display: flex;
+      justify-content: flex-end;
+      gap: 8px;
+      margin-top: 10px;
+      padding-top: 10px;
+      border-top: 1px dashed var(--border);
+    }
+
+    .day-btn {
+      background: none;
+      border: none;
+      color: var(--amber-dark);
+      font-size: 0.78rem;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .exercise-card {
+      background-color: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 14px;
+      margin-bottom: 14px;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.02);
+    }
+
+    .exercise-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 10px;
+      gap: 8px;
+    }
+
+    .exercise-title-box {
+      flex: 1;
+    }
+
+    .exercise-name-input {
+      font-size: 1.05rem;
+      font-weight: 600;
+      color: var(--text);
+      border: none;
+      background: transparent;
+      width: 100%;
+      outline: none;
+      font-family: inherit;
+    }
+
+    .exercise-scheme-input {
+      font-size: 0.78rem;
+      color: var(--amber-dark);
+      font-weight: 600;
+      border: none;
+      background: transparent;
+      outline: none;
+      font-family: inherit;
+      width: 100%;
+    }
+
+    .delete-ex-btn {
+      background: none;
+      border: none;
+      color: #b0afaa;
+      font-size: 1rem;
+      cursor: pointer;
+      padding: 0 4px;
+    }
+    .delete-ex-btn:hover {
+      color: var(--danger);
+    }
+
+    .set-row {
+      display: grid;
+      grid-template-columns: 28px 1fr 1fr 34px 24px;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 0;
+      border-bottom: 1px solid var(--card-inner);
+    }
+
+    .set-row.completed {
+      opacity: 0.55;
+    }
+
+    .set-num {
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      text-align: center;
+    }
+
+    .input-wrap {
+      display: flex;
+      align-items: center;
+      background-color: var(--card-inner);
+      border-radius: 7px;
+      padding: 4px 6px;
+    }
+
+    .val-input {
+      width: 100%;
+      border: none;
+      background: transparent;
+      font-size: 0.9rem;
+      font-weight: 600;
+      text-align: right;
+      color: var(--text);
+      outline: none;
+      font-family: inherit;
+    }
+
+    .unit {
+      font-size: 0.68rem;
+      color: var(--text-muted);
+      margin-left: 3px;
+    }
+
+    .apple-checkbox {
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      border: 1.8px solid var(--border-dark);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      margin: 0 auto;
+      background: #ffffff;
+      transition: all 0.15s ease;
+    }
+
+    .apple-checkbox.checked {
+      background-color: var(--amber);
+      border-color: var(--amber);
+    }
+
+    .apple-checkbox.checked::after {
+      content: "";
+      width: 5px;
+      height: 9px;
+      border: solid #ffffff;
+      border-width: 0 2px 2px 0;
+      transform: rotate(45deg);
+      margin-top: -2px;
+    }
+
+    .del-set-btn {
+      background: none;
+      border: none;
+      color: #cbc8be;
+      font-size: 0.9rem;
+      cursor: pointer;
+    }
+
+    .ex-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 10px;
+      padding-top: 4px;
+    }
+
+    .add-set-link {
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--amber-dark);
+      background: none;
+      border: none;
+      cursor: pointer;
+    }
+
+    .add-exercise-btn {
+      width: 100%;
+      padding: 12px;
+      border: 1.5px dashed var(--border-dark);
+      border-radius: var(--radius);
+      background: transparent;
+      color: var(--text-muted);
+      font-weight: 600;
+      font-size: 0.85rem;
+      cursor: pointer;
+      margin-top: 4px;
+    }
+
+    .session-notes-box {
+      margin-top: 18px;
+      background-color: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 12px 14px;
+    }
+
+    .session-notes-box h4 {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 6px;
+    }
+
+    .notes-textarea {
+      width: 100%;
+      border: none;
+      background: transparent;
+      resize: vertical;
+      min-height: 55px;
+      font-size: 0.85rem;
+      color: var(--text);
+      outline: none;
+      font-family: inherit;
+    }
+
+    .modal-backdrop {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0,0,0,0.4);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      padding: 20px;
+    }
+
+    .modal-box {
+      background: var(--card-bg);
+      border-radius: 16px;
+      max-width: 400px;
+      width: 100%;
+      padding: 20px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+    }
+
+    .modal-box h3 {
+      font-size: 1.15rem;
+      margin-bottom: 8px;
+    }
+
+    .modal-box p {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin-bottom: 16px;
+    }
+
+    .modal-options {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .modal-btn {
+      padding: 10px 14px;
+      border-radius: 8px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+      border: 1px solid var(--border);
+      background: var(--card-inner);
+      text-align: left;
+    }
+
+    .modal-btn.primary {
+      background-color: var(--amber);
+      color: white;
+      border-color: var(--amber);
+    }
+
+    .modal-close {
+      margin-top: 12px;
+      background: none;
+      border: none;
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      width: 100%;
+      text-align: center;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+
+<div class="app-container">
+  <header>
+    <div class="header-top">
+      <span class="app-subtitle">Apple Notes Split</span>
+      <div class="actions-row">
+        <button class="icon-btn" onclick="openBackupModal()">Backup</button>
+      </div>
+    </div>
+
+    <div class="week-bar">
+      <div class="week-nav">
+        <button class="nav-arrow" onclick="stepWeek(-1)">‹</button>
+        <select id="weekSelect" class="week-selector" onchange="switchWeek(this.value)"></select>
+        <button class="nav-arrow" onclick="stepWeek(1)">›</button>
+      </div>
+      <button class="new-week-btn" onclick="openNewWeekModal()">+ New Week</button>
+    </div>
+
+    <div class="day-selector-scroll" id="dayTabsContainer"></div>
+  </header>
+
+  <main id="dayContent"></main>
+</div>
+
+<div class="modal-backdrop" id="newWeekModal">
+  <div class="modal-box">
+    <h3>Start a New Week</h3>
+    <p>Choose how you would like to set up the new week's log:</p>
+    <div class="modal-options">
+      <button class="modal-btn primary" onclick="createNewWeek(true)">
+        <strong>Carry Over Weights</strong><br>
+        <small style="opacity:0.85">Keep last week's poundages unchecked for progression</small>
+      </button>
+      <button class="modal-btn" onclick="createNewWeek(false)">
+        <strong>Start Fresh</strong><br>
+        <small style="opacity:0.7">Keep exercises and sets, but clear all weights and reps</small>
+      </button>
+    </div>
+    <button class="modal-close" onclick="closeNewWeekModal()">Cancel</button>
+  </div>
+</div>
+
+<div class="modal-backdrop" id="backupModal">
+  <div class="modal-box">
+    <h3>Data & Backups</h3>
+    <p>Export your full workout log to JSON or restore from an existing file.</p>
+    <div class="modal-options">
+      <button class="modal-btn primary" onclick="exportData()">Download Backup (JSON)</button>
+      <input type="file" id="importInput" style="display:none" onchange="importData(event)">
+      <button class="modal-btn" onclick="document.getElementById('importInput').click()">Restore from File</button>
+    </div>
+    <button class="modal-close" onclick="closeBackupModal()">Close</button>
+  </div>
+</div>
+
+<script>
+  const DEFAULT_DAYS = [
+    {
+      id: "day-1",
+      name: "Day 1: Upper (Strength)",
+      type: "Strength 3×5",
+      desc: "Goal: 3×5 heavy compounds. Low-incline DB bench (no flat bench).",
+      notes: "",
+      exercises: [
+        { id: "e1", name: "Low-Incline DB Press (15°–30°)", target: "3 sets × 5 reps", sets: [{lbs: 75, reps: 5, done: false}, {lbs: 75, reps: 5, done: false}, {lbs: 75, reps: 5, done: false}] },
+        { id: "e2", name: "Weighted Pull-Ups (or Lat Pulldown)", target: "3 sets × 5 reps", sets: [{lbs: 25, reps: 5, done: false}, {lbs: 25, reps: 5, done: false}, {lbs: 25, reps: 5, done: false}] },
+        { id: "e3", name: "Standing Overhead Barbell Press", target: "3 sets × 5 reps", sets: [{lbs: 115, reps: 5, done: false}, {lbs: 115, reps: 5, done: false}, {lbs: 115, reps: 5, done: false}] },
+        { id: "e4", name: "Pendlay / Chest-Supported T-Bar Row", target: "3 sets × 5 reps", sets: [{lbs: 145, reps: 5, done: false}, {lbs: 145, reps: 5, done: false}, {lbs: 145, reps: 5, done: false}] },
+        { id: "e5", name: "Heavy Dips (or Close-Grip Incline DB)", target: "3 sets × 6–8 reps", sets: [{lbs: 0, reps: 8, done: false}, {lbs: 0, reps: 8, done: false}, {lbs: 0, reps: 8, done: false}] },
+        { id: "e6", name: "Heavy Dumbbell Hammer Curls", target: "3 sets × 6–8 reps", sets: [{lbs: 35, reps: 8, done: false}, {lbs: 35, reps: 8, done: false}, {lbs: 35, reps: 8, done: false}] }
+      ]
+    },
+    {
+      id: "day-2",
+      name: "Day 2: Lower (Strength)",
+      type: "Strength 3×5",
+      desc: "Goal: Maximal lower-body force. Controlled descent.",
+      notes: "",
+      exercises: [
+        { id: "e7", name: "Back Squat (or Safety Squat Bar)", target: "3 sets × 5 reps", sets: [{lbs: 225, reps: 5, done: false}, {lbs: 225, reps: 5, done: false}, {lbs: 225, reps: 5, done: false}] },
+        { id: "e8", name: "Deadlift (Conventional or Trap-Bar)", target: "3 sets × 5 reps", sets: [{lbs: 275, reps: 5, done: false}, {lbs: 275, reps: 5, done: false}, {lbs: 275, reps: 5, done: false}] },
+        { id: "e9", name: "Bulgarian Split Squats (Dumbbells)", target: "3 sets × 6–8 reps", sets: [{lbs: 40, reps: 8, done: false}, {lbs: 40, reps: 8, done: false}, {lbs: 40, reps: 8, done: false}] },
+        { id: "e10", name: "Standing Calf Raises (2s pause)", target: "3 sets × 6–8 reps", sets: [{lbs: 180, reps: 8, done: false}, {lbs: 180, reps: 8, done: false}, {lbs: 180, reps: 8, done: false}] },
+        { id: "e11", name: "Hanging Leg Raises / Ab Wheel", target: "3 sets × 10–12 reps", sets: [{lbs: 0, reps: 10, done: false}, {lbs: 0, reps: 10, done: false}, {lbs: 0, reps: 10, done: false}] }
+      ]
+    },
+    {
+      id: "day-3",
+      name: "Day 3: Push (Hypertrophy)",
+      type: "Volume 3-4×8-10",
+      desc: "Goal: High volume, strict 2-3s eccentrics, no flat barbell bench.",
+      notes: "",
+      exercises: [
+        { id: "e12", name: "Plate-Loaded Incline Chest Press", target: "4 sets × 8–10 reps", sets: [{lbs: 140, reps: 10, done: false}, {lbs: 140, reps: 10, done: false}, {lbs: 140, reps: 9, done: false}, {lbs: 140, reps: 8, done: false}] },
+        { id: "e13", name: "Flat Neutral-Grip DB Press", target: "3 sets × 8–10 reps", sets: [{lbs: 65, reps: 10, done: false}, {lbs: 65, reps: 9, done: false}, {lbs: 65, reps: 8, done: false}] },
+        { id: "e14", name: "Cable Flyes (1s contraction pause)", target: "3 sets × 10–12 reps", sets: [{lbs: 30, reps: 12, done: false}, {lbs: 30, reps: 11, done: false}, {lbs: 30, reps: 10, done: false}] },
+        { id: "e15", name: "Dumbbell Lateral Raises", target: "4 sets × 10–12 reps", sets: [{lbs: 25, reps: 12, done: false}, {lbs: 25, reps: 12, done: false}, {lbs: 25, reps: 10, done: false}, {lbs: 25, reps: 10, done: false}] },
+        { id: "e16", name: "Overhead Cable Rope Triceps Ext", target: "3 sets × 8–10 reps", sets: [{lbs: 50, reps: 10, done: false}, {lbs: 50, reps: 10, done: false}, {lbs: 50, reps: 9, done: false}] },
+        { id: "e17", name: "Straight-Bar Cable Triceps Pushdowns", target: "3 sets × 8–10 reps", sets: [{lbs: 60, reps: 10, done: false}, {lbs: 60, reps: 10, done: false}, {lbs: 60, reps: 8, done: false}] }
+      ]
+    },
+    {
+      id: "day-4",
+      name: "Day 4: Pull (Hypertrophy)",
+      type: "Volume 3-4×8-10",
+      desc: "Goal: Upper-back pump, full stretch on lats.",
+      notes: "",
+      exercises: [
+        { id: "e18", name: "Neutral-Grip Lat Pulldown", target: "4 sets × 8–10 reps", sets: [{lbs: 130, reps: 10, done: false}, {lbs: 130, reps: 10, done: false}, {lbs: 130, reps: 8, done: false}, {lbs: 130, reps: 8, done: false}] },
+        { id: "e19", name: "Seated Cable Row (Mid-Grip)", target: "4 sets × 8–10 reps", sets: [{lbs: 140, reps: 10, done: false}, {lbs: 140, reps: 10, done: false}, {lbs: 140, reps: 9, done: false}, {lbs: 140, reps: 8, done: false}] },
+        { id: "e20", name: "Chest-Supported DB Rear Delt Row", target: "3 sets × 10–12 reps", sets: [{lbs: 30, reps: 12, done: false}, {lbs: 30, reps: 11, done: false}, {lbs: 30, reps: 10, done: false}] },
+        { id: "e21", name: "Face Pulls (External Rotation)", target: "3 sets × 12–15 reps", sets: [{lbs: 45, reps: 15, done: false}, {lbs: 45, reps: 14, done: false}, {lbs: 45, reps: 12, done: false}] },
+        { id: "e22", name: "Incline Dumbbell Bicep Curls", target: "3 sets × 8–10 reps", sets: [{lbs: 30, reps: 10, done: false}, {lbs: 30, reps: 9, done: false}, {lbs: 30, reps: 8, done: false}] },
+        { id: "e23", name: "Preacher Curls (EZ-Bar or DB)", target: "3 sets × 8–10 reps", sets: [{lbs: 60, reps: 10, done: false}, {lbs: 60, reps: 9, done: false}, {lbs: 60, reps: 8, done: false}] }
+      ]
+    },
+    {
+      id: "day-5",
+      name: "Day 5: Legs (Hypertrophy)",
+      type: "Volume 3-4×8-10",
+      desc: "Goal: Quad & hamstring pump with low axial spinal compression.",
+      notes: "",
+      exercises: [
+        { id: "e24", name: "Leg Press (Mid Stance)", target: "4 sets × 8–10 reps", sets: [{lbs: 360, reps: 10, done: false}, {lbs: 360, reps: 10, done: false}, {lbs: 360, reps: 10, done: false}, {lbs: 360, reps: 9, done: false}] },
+        { id: "e25", name: "Romanian Deadlift (DBs or Barbell)", target: "3 sets × 8–10 reps", sets: [{lbs: 185, reps: 10, done: false}, {lbs: 185, reps: 9, done: false}, {lbs: 185, reps: 8, done: false}] },
+        { id: "e26", name: "Walking Dumbbell Lunges", target: "3 sets × 10 steps/leg", sets: [{lbs: 35, reps: 10, done: false}, {lbs: 35, reps: 10, done: false}, {lbs: 35, reps: 10, done: false}] },
+        { id: "e27", name: "Lying or Seated Leg Curls", target: "3 sets × 8–10 reps", sets: [{lbs: 110, reps: 10, done: false}, {lbs: 110, reps: 10, done: false}, {lbs: 110, reps: 8, done: false}] },
+        { id: "e28", name: "Leg Extensions (2s top pause)", target: "3 sets × 10–12 reps", sets: [{lbs: 120, reps: 12, done: false}, {lbs: 120, reps: 11, done: false}, {lbs: 120, reps: 10, done: false}] },
+        { id: "e29", name: "Seated Calf Raises", target: "4 sets × 10–12 reps", sets: [{lbs: 90, reps: 12, done: false}, {lbs: 90, reps: 12, done: false}, {lbs: 90, reps: 11, done: false}, {lbs: 90, reps: 10, done: false}] }
+      ]
+    }
+  ];
+
+  let appData = {
+    currentWeekId: "week-1",
+    currentDayId: "day-1",
+    weeks: [
+      { id: "week-1", title: "Week 1", days: JSON.parse(JSON.stringify(DEFAULT_DAYS)) }
+    ]
+  };
+
+  function loadData() {
+    const saved = localStorage.getItem("winter_workout_apple_app");
+    if (saved) {
+      try {
+        appData = JSON.parse(saved);
+      } catch(e) {
+        console.error("Storage error, resetting defaults");
+      }
+    }
+  }
+
+  function saveData() {
+    localStorage.setItem("winter_workout_apple_app", JSON.stringify(appData));
+  }
+
+  function getWeek() {
+    return appData.weeks.find(w => w.id === appData.currentWeekId) || appData.weeks[0];
+  }
+
+  function getDay() {
+    const week = getWeek();
+    return week.days.find(d => d.id === appData.currentDayId) || week.days[0];
+  }
+
+  function render() {
+    renderWeekBar();
+    renderDayTabs();
+    renderDayContent();
+  }
+
+  function renderWeekBar() {
+    const select = document.getElementById("weekSelect");
+    select.innerHTML = "";
+    appData.weeks.forEach(w => {
+      const opt = document.createElement("option");
+      opt.value = w.id;
+      opt.textContent = w.title;
+      opt.selected = (w.id === appData.currentWeekId);
+      select.appendChild(opt);
+    });
+  }
+
+  function switchWeek(weekId) {
+    appData.currentWeekId = weekId;
+    saveData();
+    render();
+  }
+
+  function stepWeek(delta) {
+    const idx = appData.weeks.findIndex(w => w.id === appData.currentWeekId);
+    if (idx !== -1) {
+      const nextIdx = idx + delta;
+      if (nextIdx >= 0 && nextIdx < appData.weeks.length) {
+        appData.currentWeekId = appData.weeks[nextIdx].id;
+        saveData();
+        render();
+      }
+    }
+  }
+
+  function renderDayTabs() {
+    const week = getWeek();
+    const container = document.getElementById("dayTabsContainer");
+    container.innerHTML = "";
+
+    week.days.forEach(day => {
+      const btn = document.createElement("button");
+      btn.className = `day-tab ${day.id === appData.currentDayId ? 'active' : ''}`;
+      btn.onclick = () => {
+        appData.currentDayId = day.id;
+        saveData();
+        render();
+      };
+
+      const titleSpan = document.createElement("span");
+      titleSpan.textContent = day.name.split(":")[0];
+      const typeSpan = document.createElement("span");
+      typeSpan.className = "tag";
+      typeSpan.textContent = day.type.includes("Strength") ? "Strength" : "Volume";
+
+      btn.appendChild(titleSpan);
+      btn.appendChild(typeSpan);
+      container.appendChild(btn);
+    });
+  }
+
+  function renderDayContent() {
+    const day = getDay();
+    const container = document.getElementById("dayContent");
+
+    let exercisesHtml = day.exercises.map((ex, exIdx) => {
+      let setsHtml = ex.sets.map((set, sIdx) => `
+        <div class="set-row ${set.done ? 'completed' : ''}">
+          <div class="set-num">${sIdx + 1}</div>
+          <div class="input-wrap">
+            <input type="number" class="val-input" value="${set.lbs !== undefined ? set.lbs : ''}" placeholder="0" 
+              onchange="updateSetVal(${exIdx}, ${sIdx}, 'lbs', this.value)" inputmode="decimal">
+            <span class="unit">lbs</span>
+          </div>
+          <div class="input-wrap">
+            <input type="number" class="val-input" value="${set.reps !== undefined ? set.reps : ''}" placeholder="0"
+              onchange="updateSetVal(${exIdx}, ${sIdx}, 'reps', this.value)" inputmode="numeric">
+            <span class="unit">reps</span>
+          </div>
+          <div class="apple-checkbox ${set.done ? 'checked' : ''}" 
+            onclick="toggleSetCheck(${exIdx}, ${sIdx})"></div>
+          <button class="del-set-btn" onclick="deleteSet(${exIdx}, ${sIdx})">×</button>
+        </div>
+      `).join("");
+
+      return `
+        <div class="exercise-card">
+          <div class="exercise-head">
+            <div class="exercise-title-box">
+              <input class="exercise-name-input" value="${ex.name}" 
+                onchange="updateExerciseField(${exIdx}, 'name', this.value)">
+              <input class="exercise-scheme-input" value="${ex.target}" 
+                onchange="updateExerciseField(${exIdx}, 'target', this.value)">
+            </div>
+            <button class="delete-ex-btn" title="Delete Exercise" onclick="deleteExercise(${exIdx})">✕</button>
+          </div>
+          <div class="sets-table">
+            ${setsHtml}
+          </div>
+          <div class="ex-footer">
+            <button class="add-set-link" onclick="addSet(${exIdx})">+ Add Set</button>
+            <button class="day-btn" onclick="toggleAllSetsForExercise(${exIdx})">Check/Uncheck All</button>
+          </div>
+        </div>
+      `;
+    }).join("");
+
+    container.innerHTML = `
+      <div class="day-banner">
+        <input class="day-title-input" value="${day.name}" onchange="updateDayField('name', this.value)">
+        <input class="day-desc-input" value="${day.desc}" onchange="updateDayField('desc', this.value)">
+        <div class="day-controls">
+          <button class="day-btn" onclick="clearDayChecks()">Clear Checks</button>
+          <button class="day-btn" onclick="resetDayWeights()">Reset Weights</button>
+        </div>
+      </div>
+
+      ${exercisesHtml}
+
+      <button class="add-exercise-btn" onclick="addNewExercise()">+ Add Custom Exercise</button>
+
+      <div class="session-notes-box">
+        <h4>Session Notes</h4>
+        <textarea class="notes-textarea" placeholder="How did the session feel? Notes..."
+          onchange="updateDayField('notes', this.value)">${day.notes || ''}</textarea>
+      </div>
+    `;
+  }
+
+  function updateDayField(field, val) {
+    const day = getDay();
+    day[field] = val;
+    saveData();
+    if (field === 'name') renderDayTabs();
+  }
+
+  function updateExerciseField(exIdx, field, val) {
+    const day = getDay();
+    day.exercises[exIdx][field] = val;
+    saveData();
+  }
+
+  function updateSetVal(exIdx, setIdx, field, val) {
+    const day = getDay();
+    day.exercises[exIdx].sets[setIdx][field] = val === '' ? '' : parseFloat(val);
+    saveData();
+  }
+
+  function toggleSetCheck(exIdx, setIdx) {
+    const day = getDay();
+    day.exercises[exIdx].sets[setIdx].done = !day.exercises[exIdx].sets[setIdx].done;
+    saveData();
+    renderDayContent();
+  }
+
+  function addSet(exIdx) {
+    const day = getDay();
+    const ex = day.exercises[exIdx];
+    const lastSet = ex.sets[ex.sets.length - 1] || { lbs: 0, reps: 8 };
+    ex.sets.push({ lbs: lastSet.lbs, reps: lastSet.reps, done: false });
+    saveData();
+    renderDayContent();
+  }
+
+  function deleteSet(exIdx, setIdx) {
+    const day = getDay();
+    day.exercises[exIdx].sets.splice(setIdx, 1);
+    saveData();
+    renderDayContent();
+  }
+
+  function toggleAllSetsForExercise(exIdx) {
+    const day = getDay();
+    const ex = day.exercises[exIdx];
+    const hasUnchecked = ex.sets.some(s => !s.done);
+    ex.sets.forEach(s => s.done = hasUnchecked);
+    saveData();
+    renderDayContent();
+  }
+
+  function addNewExercise() {
+    const name = prompt("Exercise Name:");
+    if (!name) return;
+    const day = getDay();
+    day.exercises.push({
+      id: "custom-" + Date.now(),
+      name: name,
+      target: "3 sets × 8–10 reps",
+      sets: [
+        { lbs: 50, reps: 10, done: false },
+        { lbs: 50, reps: 10, done: false },
+        { lbs: 50, reps: 10, done: false }
+      ]
+    });
+    saveData();
+    renderDayContent();
+  }
+
+  function deleteExercise(exIdx) {
+    if (confirm("Delete this exercise?")) {
+      const day = getDay();
+      day.exercises.splice(exIdx, 1);
+      saveData();
+      renderDayContent();
+    }
+  }
+
+  function clearDayChecks() {
+    const day = getDay();
+    day.exercises.forEach(ex => ex.sets.forEach(s => s.done = false));
+    saveData();
+    renderDayContent();
+  }
+
+  function resetDayWeights() {
+    if (confirm("Reset checks for this day?")) {
+      const day = getDay();
+      day.exercises.forEach(ex => {
+        ex.sets.forEach(s => {
+          s.done = false;
+        });
+      });
+      saveData();
+      renderDayContent();
+    }
+  }
+
+  function openNewWeekModal() {
+    document.getElementById("newWeekModal").style.display = "flex";
+  }
+
+  function closeNewWeekModal() {
+    document.getElementById("newWeekModal").style.display = "none";
+  }
+
+  function createNewWeek(carryOver) {
+    const currentWk = getWeek();
+    const newNum = appData.weeks.length + 1;
+    const newId = "week-" + Date.now();
+
+    const newDays = JSON.parse(JSON.stringify(currentWk.days));
+
+    newDays.forEach(day => {
+      day.notes = "";
+      day.exercises.forEach(ex => {
+        ex.sets.forEach(set => {
+          set.done = false;
+          if (!carryOver) {
+            set.lbs = "";
+            set.reps = "";
+          }
+        });
+      });
+    });
+
+    appData.weeks.push({
+      id: newId,
+      title: "Week " + newNum,
+      days: newDays
+    });
+
+    appData.currentWeekId = newId;
+    saveData();
+    closeNewWeekModal();
+    render();
+  }
+
+  function openBackupModal() {
+    document.getElementById("backupModal").style.display = "flex";
+  }
+
+  function closeBackupModal() {
+    document.getElementById("backupModal").style.display = "none";
+  }
+
+  function exportData() {
+    const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(appData, null, 2));
+    const dlAnchor = document.createElement('a');
+    dlAnchor.setAttribute("href", dataStr);
+    dlAnchor.setAttribute("download", `workout_backup_${new Date().toISOString().slice(0,10)}.json`);
+    dlAnchor.click();
+    closeBackupModal();
+  }
+
+  function importData(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = function(e) {
+      try {
+        const parsed = JSON.parse(e.target.result);
+        if (parsed.weeks && parsed.currentWeekId) {
+          appData = parsed;
+          saveData();
+          render();
+          closeBackupModal();
+          alert("Backup successfully restored!");
+        } else {
+          alert("Invalid backup JSON structure.");
+        }
+      } catch (err) {
+        alert("Failed to parse file.");
+      }
+    };
+    reader.readAsText(file);
+  }
+
+  window.addEventListener('DOMContentLoaded', () => {
+    loadData();
+    render();
+  });
+</script>
+</body>
+</html>
